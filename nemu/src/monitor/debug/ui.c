@@ -72,7 +72,7 @@ static int cmd_x(char *args){
 		return 0;
 	}
 	int n=atoi(n_str);
-	uint32_t addr=(uint32_t)atoi(addr_str);
+	uint32_t addr=(uint32_t)strtoul(addr_str,NULL,0);
 	for(int i=0;i<n;i++){
 		if(i%4==0){
 			printf("\n0x%08x",addr+i*4);
