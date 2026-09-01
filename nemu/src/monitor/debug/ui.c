@@ -36,6 +36,30 @@ static int cmd_q(char *args) {
 	return -1;
 }
 
+static int cmd_si(char *args){
+	int steps=1;
+	if(args!=NULL){
+		steps=(uint32_t)atoi(args);
+	}
+	cpu_exec(steps);
+	nemu_state=STOP;
+	return 0;
+}
+
+static int cmd_info(char* args){
+	if(args!=NULL&&strcmp(args,"r")==0){
+		for(int i=R_EAX;i<=R_EDI;i++){
+			printf("%s\t0x%x\t%u\n", regsl[i], reg_l(i), reg_l(i));
+			printf("eip\t0x%x\t%u\n",cpu.eip,cpu.eip);
+		}
+		return 0;
+	}
+	else if(args!=NULL&&strcmp(args,"w")==0){
+
+	}
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -46,6 +70,8 @@ static struct {
 	{ "help", "Display informations about all supported commands", cmd_help },
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
+	{"si","Step-by-step execution",cmd_si},
+	{"info","Print program status",cmd_info},
 
 	/* TODO: Add more commands */
 
