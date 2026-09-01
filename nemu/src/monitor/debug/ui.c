@@ -75,10 +75,10 @@ static int cmd_x(char *args){
 	uint32_t addr=(uint32_t)strtoul(addr_str,NULL,0);
 	for(int i=0;i<n;i++){
 		if(i%4==0){
-			printf("\n0x%08x",addr+i*4);
+			printf("\n0x%08x  :",addr+i*4);
 		}
 		uint32_t val=swaddr_read(addr+i*4,4);
-		printf("0x%08x",val);
+		printf("0x%08x  ",val);
 	}
 	printf("\n");
 	return 0;
