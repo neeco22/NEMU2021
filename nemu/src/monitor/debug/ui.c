@@ -60,6 +60,30 @@ static int cmd_info(char* args){
 	return 0;
 }
 
+static int cmd_x(char *args){
+	if(args==NULL){
+		printf("Please enter:x N EXPR\n");
+		return 0;
+	}
+	char *n_str=strtok(args," ");
+	char *addr_str=strtok(NULL," ");
+	if(n_str==NULL||addr_str==NULL){
+		printf("Please enter:x N EXPR\n");
+		return 0;
+	}
+	int n=atoi(n_str);
+	uint32_t addr=(uint32_t)atoi(addr_str);
+	for(int i=0;i<n;i++){
+		if(i%4==0){
+			printf("\n0x%08x",addr+i*4);
+		}
+		uint32_t val=swaddr_read(addr+i*4,4);
+		printf("0x%08x",val);
+	}
+	printf("\n");
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -72,6 +96,7 @@ static struct {
 	{ "q", "Exit NEMU", cmd_q },
 	{"si","Step-by-step execution",cmd_si},
 	{"info","Print program status",cmd_info},
+	{"x","Scan memory",cmd_x},
 
 	/* TODO: Add more commands */
 
