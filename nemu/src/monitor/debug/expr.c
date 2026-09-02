@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-	NOTYPE = 256, EQ
+	NOTYPE = 256, TK_NUM,EQ
 
 	/* TODO: Add more token types */
 
@@ -22,8 +22,14 @@ static struct rule {
 	 * Pay attention to the precedence level of different rules.
 	 */
 
-	{" +",	NOTYPE},				// spaces
-	{"\\+", '+'},					// plus
+	{" +",	NOTYPE},
+	{"[0-9]+",TK_NUM},				// spaces
+	{"\\+", '+'},
+	{"\\-",'-'},
+	{"\\*",'*'},
+	{"\\/",'/'},
+	{"\\(",'('},
+	{"\\)",')'},					// plus
 	{"==", EQ}						// equal
 };
 
@@ -77,8 +83,33 @@ static bool make_token(char *e) {
 				 * to record the token in the array `tokens'. For certain types
 				 * of tokens, some extra actions should be performed.
 				 */
-
 				switch(rules[i].token_type) {
+					case NOTYPE:break;
+					case '+':
+					case '-':
+					case '*':
+					case '/':
+					case '(':
+					case ')':{
+						Token token;
+						token.type=rules[i].token_type;
+						token.str[0]=rules[i].token_type;
+						token.str[1]='\0';
+						tokens[nr_token]=token;
+						nr_token++;
+						break;
+					}
+					case TK_NUM:{
+						Token token;
+						token.type=rules[i].token_type;
+						for(int j=0;j<substr_len;j++){
+							token.str[j]=substr_start[j];
+						}
+						token.str[substr_len]='\0';
+						tokens[nr_token]=token;
+						nr_token++;
+						break;
+					}
 					default: panic("please implement me");
 				}
 
