@@ -5,6 +5,7 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include<stdlib.h>
 
 enum {
 	NOTYPE = 256, TK_NUM,EQ
@@ -23,6 +24,7 @@ static struct rule {
 	 */
 
 	{" +",	NOTYPE},
+	{"0[xX][0-9a-fA-F]",TK_NUM},
 	{"[0-9]+",TK_NUM},				// spaces
 	{"\\+", '+'},
 	{"\\-",'-'},
@@ -126,12 +128,91 @@ static bool make_token(char *e) {
 	return true; 
 }
 
+bool check_parentheses(int p,int q){
+	int left_parenthesis=0;
+	if(tokens[p].type!='('||tokens[q].type!=')'){
+		return false;
+	}
+	else{
+		for(int i=p+1;i<q;i++){
+			if(tokens[i].type=='(') left_parenthesis++;
+			else if(tokens[i].type==')'){
+				if(left_parenthesis==0) return false;
+				else left_parenthesis--;
+			}
+			else continue;
+		}
+	}
+	return left_parenthesis==0;
+}
+
+int eval(int p,int q){
+	if(p>q){
+		printf("Wrong postion in eval\n");
+		assert(0);
+	}
+	else if(p==q){
+		return (int)strtol(tokens[p].str,NULL,0);
+	}
+	else if(check_parentheses(p,q)==true){
+		return eval(p+1,q-1);
+	}
+	else{
+		int op=-1,op_type=-1;
+		int paren=0;
+		for(int i=p;i<=q;i++){
+			if(tokens[i].type==TK_NUM) continue;
+			if(tokens[i].type=='(') paren++;
+			if(tokens[i].type==')') paren--;
+			if(paren>0) continue;
+			else{
+				if((tokens[i].type=='+'||tokens[i].type=='-')&&i>p&&
+					(tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
+					op=i;
+					op_type=tokens[i].type;
+				}
+				else if((tokens[i].type=='*'||tokens[i].type=='/')&&(op_type!='+'&&op_type!='-')){
+					op=i;
+					op_type=tokens[i].type;
+				}
+			}
+		}
+		if(op==-1) {
+			if(tokens[p].type=='-'&&p<q){
+				return -eval(p+1,q);
+			}
+			printf("eval error\n");
+			assert(0);
+		}
+		int val1=eval(p,op-1);
+		int val2=eval(op+1,q);
+
+		switch (op_type)
+		{
+		case '+':
+			return val1+val2;
+			break;
+		case '-':
+			return val1-val2;
+			break;;
+		case '*':
+			return val1*val2;
+			break;
+		case '/':
+			return val1/val2;
+			break;
+		default:
+			assert(0);
+		}
+	}
+}
+
 uint32_t expr(char *e, bool *success) {
 	if(!make_token(e)) {
 		*success = false;
 		return 0;
 	}
-
+	
 	/* TODO: Insert codes to evaluate the expression. */
 	panic("please implement me");
 	return 0;
