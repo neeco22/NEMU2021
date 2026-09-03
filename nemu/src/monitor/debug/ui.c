@@ -84,6 +84,22 @@ static int cmd_x(char *args){
 	return 0;
 }
 
+static int cmd_p(char *args){
+	if(args==NULL){
+		printf("Please Enter:p <表达式>\n");
+		return 0;
+	}
+	bool success;
+	uint32_t val=expr(args,&success);
+	if(success){
+		printf("0x%x(%u)\n",val,val);
+	}
+	else{
+		printf("表达式求值失败\n");
+	}
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -97,6 +113,7 @@ static struct {
 	{"si","Step-by-step execution",cmd_si},
 	{"info","Print program status",cmd_info},
 	{"x","Scan memory",cmd_x},
+	{"p","Expression evaluation",cmd_p},
 
 	/* TODO: Add more commands */
 
