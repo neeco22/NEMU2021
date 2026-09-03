@@ -92,7 +92,7 @@ static int cmd_p(char *args){
 	bool success;
 	uint32_t val=expr(args,&success);
 	if(success){
-		printf("0x%x(%u)\n",val,val);
+		printf("0x%08x(%u)\n",val,val);
 	}
 	else{
 		printf("表达式求值失败\n");
