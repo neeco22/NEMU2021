@@ -24,7 +24,7 @@ static struct rule {
 	 */
 
 	{" +",	NOTYPE},
-	{"0[xX][0-9a-fA-F]",TK_NUM},
+	{"0[xX][0-9a-fA-F]+",TK_NUM},
 	{"[0-9]+",TK_NUM},				// spaces
 	{"\\+", '+'},
 	{"\\-",'-'},
