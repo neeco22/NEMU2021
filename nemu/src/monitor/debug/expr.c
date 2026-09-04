@@ -8,7 +8,7 @@
 #include<stdlib.h>
 
 enum {
-	NOTYPE = 256, TK_NUM,EQ
+	NOTYPE = 256, TK_NUM,TK_REG,NE,AND,OR,EQ
 
 	/* TODO: Add more token types */
 
@@ -24,8 +24,13 @@ static struct rule {
 	 */
 
 	{" +",	NOTYPE},
+	{"\\$[a-z]+",TK_REG},
 	{"0[xX][0-9a-fA-F]+",TK_NUM},
-	{"[0-9]+",TK_NUM},				// spaces
+	{"[0-9]+",TK_NUM},
+	{"!=",NE},
+	{"&&",AND},	
+	{"||",OR},
+	{"!",'!'},		// spaces
 	{"\\+", '+'},
 	{"\\-",'-'},
 	{"\\*",'*'},
@@ -78,6 +83,8 @@ static bool make_token(char *e) {
 				char *substr_start = e + position;
 				int substr_len = pmatch.rm_eo;
 
+				if(substr_len>32) printf("token exceeds length limit");
+
 				Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i, rules[i].regex, position, substr_len, substr_len, substr_start);
 				position += substr_len;
 
@@ -87,34 +94,23 @@ static bool make_token(char *e) {
 				 */
 				switch(rules[i].token_type) {
 					case NOTYPE:break;
-					case '+':
-					case '-':
-					case '*':
-					case '/':
-					case '(':
-					case ')':{
-						Token token;
-						token.type=rules[i].token_type;
-						token.str[0]=rules[i].token_type;
-						token.str[1]='\0';
-						tokens[nr_token]=token;
-						nr_token++;
-						break;
-					}
-					case TK_NUM:{
+					default:
+					{
 						Token token;
 						token.type=rules[i].token_type;
 						for(int j=0;j<substr_len;j++){
 							token.str[j]=substr_start[j];
 						}
 						token.str[substr_len]='\0';
+						if(nr_token>=32){
+							printf("too many tokens");
+							return false;
+						}
 						tokens[nr_token]=token;
 						nr_token++;
 						break;
 					}
-					default: panic("please implement me");
 				}
-
 				break;
 			}
 		}
@@ -152,6 +148,19 @@ int eval(int p,int q){
 		assert(0);
 	}
 	else if(p==q){
+		if(tokens[p].type==TK_REG){
+			char *sub=tokens[p].str+1;
+			if(strcmp(sub,"eip")==0) return cpu.eip;
+			else{
+				for(int i=R_EAX;i<=R_EDI;i++){
+					if(strcmp(sub,regsl[i])==0){
+						return reg_l(i);
+					}
+				}
+			}
+			printf("Unknown register: %s\n",sub);
+			assert(0);
+		}
 		return (int)strtol(tokens[p].str,NULL,0);
 	}
 	else if(check_parentheses(p,q)==true){
@@ -159,6 +168,7 @@ int eval(int p,int q){
 	}
 	else{
 		int op=-1,op_type=-1;
+		int priority=-1; //'+''-':5,'*''/':4 ,'==''!=':3,'&&'=2,'||'=1
 		int paren=0;
 		for(int i=p;i<=q;i++){
 			if(tokens[i].type==TK_NUM) continue;
@@ -170,16 +180,47 @@ int eval(int p,int q){
 					(tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
 					op=i;
 					op_type=tokens[i].type;
+					priority=5;
 				}
-				else if((tokens[i].type=='*'||tokens[i].type=='/')&&(op_type!='+'&&op_type!='-')){
+				else if((tokens[i].type=='*'||tokens[i].type=='/')&&(priority<=4)&&i>p&&
+					(tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
 					op=i;
 					op_type=tokens[i].type;
+					priority=4;
+				}
+				else if((tokens[i].type==EQ||tokens[i].type==NE)&&priority<=3){
+					op=i;
+					op_type=tokens[i].type;
+					priority=3;
+				}
+				else if((tokens[i].type==AND)&&priority<=2){
+					op=i;
+					op_type=tokens[i].type;
+					priority=2;
+				}
+				else if((tokens[i].type==OR)&&priority<=1){
+					op=i;
+					op_type=tokens[i].type;
+					priority=1;
 				}
 			}
 		}
 		if(op==-1) {
-			if(tokens[p].type=='-'&&p<q){
-				return -eval(p+1,q);
+			if(p<q){
+				switch (tokens[p].type)
+				{
+				case '-':
+					return -eval(p+1,q);
+					break;
+				case '*':
+					return swaddr_read(eval(p+1,q),4);
+					break;
+				case '!':
+					return !eval(p+1,q);
+					break;
+				default:
+					break;
+				}
 			}
 			printf("eval error\n");
 			assert(0);
@@ -200,6 +241,18 @@ int eval(int p,int q){
 			break;
 		case '/':
 			return val1/val2;
+			break;
+		case EQ:
+			return val1==val2;
+			break;
+		case NE:
+			return val1!=val2;
+			break;
+		case AND:
+			return val1&&val2;
+			break;
+		case OR:
+			return val1||val2;
 			break;
 		default:
 			assert(0);
