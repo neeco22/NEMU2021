@@ -177,13 +177,13 @@ int eval(int p,int q){
 			if(paren>0) continue;
 			else{
 				if((tokens[i].type=='+'||tokens[i].type=='-')&&i>p&&
-					(tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
+					(tokens[i-1].type==TK_REG||tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
 					op=i;
 					op_type=tokens[i].type;
 					priority=5;
 				}
 				else if((tokens[i].type=='*'||tokens[i].type=='/')&&(priority<=4)&&i>p&&
-					(tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
+					(tokens[i-1].type==TK_REG||tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
 					op=i;
 					op_type=tokens[i].type;
 					priority=4;
@@ -222,8 +222,7 @@ int eval(int p,int q){
 					break;
 				}
 			}
-			printf("eval error\n");
-			assert(0);
+			
 		}
 		int val1=eval(p,op-1);
 		int val2=eval(op+1,q);
