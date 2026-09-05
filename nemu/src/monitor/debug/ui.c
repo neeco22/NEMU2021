@@ -100,6 +100,16 @@ static int cmd_p(char *args){
 	return 0;
 }
 
+static int cmd_w(char *args){
+	WP* wp=new_wp();
+	bool success;
+	wp->expression=strdup(args);
+	wp->val=expr(args,&success);
+	wp->address=cpu.eip;
+	printf("Set watchpoint #%d\n",wp->NO);
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -111,9 +121,10 @@ static struct {
 	{ "c", "Continue the execution of the program", cmd_c },
 	{ "q", "Exit NEMU", cmd_q },
 	{"si","Step-by-step execution",cmd_si},
-	{"info","Print program status",cmd_info},
+	{"info","info r:Print program status\ninfo w:Print watchpoint information",cmd_info},
 	{"x","Scan memory",cmd_x},
 	{"p","Expression evaluation",cmd_p},
+	{"w","Set watchpoint",cmd_w},
 
 	/* TODO: Add more commands */
 
