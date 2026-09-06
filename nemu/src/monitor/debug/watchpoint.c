@@ -68,4 +68,13 @@ void display_watchpoint(){
 	}
 }
 
+WP* find_wp(int NO){
+	WP* wp=head;
+	while(wp!=NULL){
+		if(wp->NO==NO) return wp;
+		wp=wp->next;
+	}
+	return wp;
+}
+
 

@@ -110,6 +110,22 @@ static int cmd_w(char *args){
 	return 0;
 }
 
+static int cmd_d(char *args){
+	int NO=strtol(args,NULL,0);
+	if(NO<0||NO>32){
+		printf("The NO is a wrong number\n");
+		return 0;
+	}
+	WP* wp=find_wp(NO);
+	if(wp==NULL){
+		printf("Watchpoint #%d does not exist\n",NO);
+	}
+	else{
+		free_wp(wp);
+	}
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -125,6 +141,7 @@ static struct {
 	{"x","Scan memory",cmd_x},
 	{"p","Expression evaluation",cmd_p},
 	{"w","Set watchpoint",cmd_w},
+	{"d","Delete watchpoint",cmd_d},
 
 	/* TODO: Add more commands */
 
