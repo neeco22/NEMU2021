@@ -98,7 +98,8 @@ static bool make_token(char *e) {
 					{
 						Token token;
 						token.type=rules[i].token_type;
-						for(int j=0;j<substr_len;j++){
+						int j;
+						for(j=0;j<substr_len;j++){
 							token.str[j]=substr_start[j];
 						}
 						token.str[substr_len]='\0';
@@ -130,7 +131,8 @@ bool check_parentheses(int p,int q){
 		return false;
 	}
 	else{
-		for(int i=p+1;i<q;i++){
+		int i;
+		for(i=p+1;i<q;i++){
 			if(tokens[i].type=='(') left_parenthesis++;
 			else if(tokens[i].type==')'){
 				if(left_parenthesis==0) return false;
@@ -152,7 +154,8 @@ int eval(int p,int q){
 			char *sub=tokens[p].str+1;
 			if(strcmp(sub,"eip")==0) return cpu.eip;
 			else{
-				for(int i=R_EAX;i<=R_EDI;i++){
+				int i;
+				for(i=R_EAX;i<=R_EDI;i++){
 					if(strcmp(sub,regsl[i])==0){
 						return reg_l(i);
 					}
@@ -170,7 +173,8 @@ int eval(int p,int q){
 		int op=-1,op_type=-1;
 		int priority=-1; //'+''-':5,'*''/':4 ,'==''!=':3,'&&'=2,'||'=1
 		int paren=0;
-		for(int i=p;i<=q;i++){
+		int i;
+		for(i=p;i<=q;i++){
 			if(tokens[i].type==TK_NUM) continue;
 			if(tokens[i].type=='(') paren++;
 			if(tokens[i].type==')') paren--;
