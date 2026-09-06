@@ -55,7 +55,7 @@ static int cmd_info(char* args){
 		return 0;
 	}
 	else if(args!=NULL&&strcmp(args,"w")==0){
-
+		display_watchpoint();
 	}
 	return 0;
 }

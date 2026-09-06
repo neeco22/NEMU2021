@@ -59,4 +59,13 @@ int wp_is_changed(){
 	return -1;
 }
 
+void display_watchpoint(){
+	printf("NO    Address    Enable\n");
+	WP* wp=head;
+	while(wp!=NULL){
+		printf("%d    $eip == 0x%08x    %d\n",wp->NO,wp->address,wp->val);
+		wp=wp->next;
+	}
+}
+
 
