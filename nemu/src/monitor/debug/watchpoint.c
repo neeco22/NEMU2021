@@ -63,7 +63,7 @@ void display_watchpoint(){
 	printf("NO    Address    Enable\n");
 	WP* wp=head;
 	while(wp!=NULL){
-		printf("%d    $eip == 0x%08x    %d\n",wp->NO,wp->address,wp->val);
+		printf("%d    %s    %d\n",wp->NO,wp->expression,wp->val);
 		wp=wp->next;
 	}
 }
