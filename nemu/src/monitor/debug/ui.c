@@ -49,9 +49,9 @@ static int cmd_si(char *args){
 static int cmd_info(char* args){
 	if(args!=NULL&&strcmp(args,"r")==0){
 		for(int i=R_EAX;i<=R_EDI;i++){
-			printf("%s\t0x%x\t%u\n", regsl[i], reg_l(i), reg_l(i));
+			printf("$%s\t0x%08x\t%u\n", regsl[i], reg_l(i), reg_l(i));
 		}
-		printf("eip\t0x%x\t%u\n",cpu.eip,cpu.eip);
+		printf("$eip\t0x%08x\t%u\n",cpu.eip,cpu.eip);
 		return 0;
 	}
 	else if(args!=NULL&&strcmp(args,"w")==0){
