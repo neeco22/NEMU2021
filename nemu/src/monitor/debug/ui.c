@@ -48,7 +48,8 @@ static int cmd_si(char *args){
 
 static int cmd_info(char* args){
 	if(args!=NULL&&strcmp(args,"r")==0){
-		for(int i=R_EAX;i<=R_EDI;i++){
+		int i;
+		for(i=R_EAX;i<=R_EDI;i++){
 			printf("$%s\t0x%08x\t%u\n", regsl[i], reg_l(i), reg_l(i));
 		}
 		printf("$eip\t0x%08x\t%u\n",cpu.eip,cpu.eip);
@@ -73,7 +74,8 @@ static int cmd_x(char *args){
 	}
 	int n=atoi(n_str);
 	uint32_t addr=(uint32_t)strtoul(addr_str,NULL,0);
-	for(int i=0;i<n;i++){
+	int i;
+	for(i=0;i<n;i++){
 		if(i%4==0){
 			printf("\n0x%08x  :",addr+i*4);
 		}
