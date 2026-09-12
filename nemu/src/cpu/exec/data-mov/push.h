@@ -2,5 +2,6 @@
 #define __PUSH_H__
 
 make_helper(push_r_l);
+make_helper(push_rm_l);
 
 #endif
