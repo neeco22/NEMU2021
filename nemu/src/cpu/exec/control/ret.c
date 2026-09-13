@@ -6,3 +6,11 @@ make_helper(ret) {
     print_asm("ret");
     return 0;
 }
+
+make_helper(ret_iw){
+    uint16_t imm=swaddr_read(cpu.esp+1,2);
+    cpu.eip=swaddr_read(cpu.esp,4);
+    cpu.esp+=4+imm;
+    print_asm("ret %x",imm);
+    return 0;
+}
