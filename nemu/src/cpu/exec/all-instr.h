@@ -26,6 +26,7 @@
 #include "control/jcc.h"
 #include "control/leave.h"
 #include "control/setcc.h"
+#include "control/cmov.h"
 
 #include "logic/and.h"
 #include "logic/or.h"
