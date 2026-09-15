@@ -4,25 +4,22 @@
 #include "trap.h"
 
 typedef int FLOAT;
+#define val 0x10000
 
 static inline int F2int(FLOAT a) {
-	nemu_assert(0);
-	return 0;
+	return a / val;
 }
 
 static inline FLOAT int2F(int a) {
-	nemu_assert(0);
-	return 0;
+	return a * val;
 }
 
 static inline FLOAT F_mul_int(FLOAT a, int b) {
-	nemu_assert(0);
-	return 0;
+	return a * b;
 }
 
 static inline FLOAT F_div_int(FLOAT a, int b) {
-	nemu_assert(0);
-	return 0;
+	return a / b;
 }
 
 FLOAT f2F(float);
