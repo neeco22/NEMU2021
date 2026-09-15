@@ -10,7 +10,7 @@ FLOAT F_div_F(FLOAT a, FLOAT b) {
 	asm volatile("idivl %2"
 		: "=a"(quotient), "=d"(remainder)
 		: "r"(b),
-		"a"(dividend), "d"(dividend >> 32));
+		"a"((int)dividend), "d"((int)(dividend >> 32)));
 	return quotient;
 }
 
