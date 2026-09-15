@@ -23,7 +23,7 @@ $(testcase_OBJ_DIR)/integral.o: testcase/src/integral.c
 	$(call make_command, $(CC), $(testcase_CFLAGS) -O2, cc $@, $<)
 
 $(testcase_OBJ_DIR)/quadratic-eq.o: testcase/src/quadratic-eq.c
-	$(call make_command, $(CC), $(testcase_CFLAGS) -O2, cc $@, $<)
+	$(call make_command, $(CC), $(testcase_CFLAGS) -O2 -mno-80387, cc $@, $<)
 
 
 # These rules are used to generate print-FLOAT program run under

@@ -12,9 +12,6 @@ $(FLOAT): $(FLOAT_A_OBJ)
 
 # TODO: complete the following rules
 
-$(testcase_OBJ_DIR)/quadratic-eq.o: testcase/src/quadratic-eq.c
-	$(call make_command, $(CC), $(testcase_CFLAGS) -O2 -mno-80387, cc $@, $<)
-
 $(FLOAT_O): $(FLOAT_SRC_DIR)/FLOAT.c
 	$(call make_command, $(CC), -m32 -O2 -fno-if-conversion -fno-builtin -I$(LIB_COMMON_DIR) -I$(LIBC_INC_DIR) -c,cc$<, $<)
 
