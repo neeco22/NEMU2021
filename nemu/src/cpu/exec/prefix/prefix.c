@@ -8,3 +8,8 @@ make_helper(operand_size) {
 	ops_decoded.is_operand_size_16 = false;
 	return instr_len + 1;
 }
+
+make_helper(seg_override){
+	int instr_len = exec(eip + 1);
+	return instr_len + 1;
+}
