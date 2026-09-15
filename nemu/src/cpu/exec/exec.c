@@ -181,6 +181,8 @@ helper_fun _2byte_opcode_table [256] = {
 /* 0x44 */	cmove, cmovne, cmovbe, cmova,
 /* 0x48 */	cmovs, cmovns, cmovp, cmovnp,
 /* 0x4c */	cmovl, cmovge, cmovle, cmovg,
+/* 0x50 */	inv, inv, inv, inv,
+/* 0x54 */	inv, inv, inv, inv,
 /* 0x58 */	inv, inv, inv, inv, 
 /* 0x5c */	inv, inv, inv, inv, 
 /* 0x60 */	inv, inv, inv, inv,
