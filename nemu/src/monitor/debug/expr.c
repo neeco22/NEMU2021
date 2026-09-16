@@ -187,7 +187,7 @@ int eval(int p,int q){
 			if(paren>0) continue;
 			else{
 				if((tokens[i].type=='+'||tokens[i].type=='-')&&i>p&&
-					(tokens[i-1].type==TK_REG||tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
+					(tokens[i-1].type==TK_IDENT||tokens[i-1].type==TK_REG||tokens[i-1].type==TK_NUM||tokens[i-1].type==')')){
 					op=i;
 					op_type=tokens[i].type;
 					priority=5;
