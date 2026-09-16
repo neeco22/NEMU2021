@@ -6,10 +6,11 @@
 #include <sys/types.h>
 #include <regex.h>
 #include<stdlib.h>
+#include "monitor/elf.h"
 
 enum {
-	NOTYPE = 256, TK_NUM,TK_REG,NE,AND,OR,EQ
-
+	NOTYPE = 256, TK_NUM,TK_REG,NE,AND,OR,EQ,
+	TK_IDENT
 	/* TODO: Add more token types */
 
 };
@@ -27,6 +28,8 @@ static struct rule {
 	{"\\$[a-z]+",TK_REG},
 	{"0[xX][0-9a-fA-F]+",TK_NUM},
 	{"[0-9]+",TK_NUM},
+	{"[a-zA-Z_][a-zA-Z0-9_]*",TK_IDENT},
+	{"==",EQ},
 	{"!=",NE},
 	{"&&",AND},	
 	{"\\|\\|",OR},
@@ -163,6 +166,9 @@ int eval(int p,int q){
 			}
 			printf("Unknown register: %s\n",sub);
 			assert(0);
+		}
+		else if(tokens[p].type==TK_IDENT){
+			return lookup_symbol(tokens[p].str);
 		}
 		return (int)strtol(tokens[p].str,NULL,0);
 	}
