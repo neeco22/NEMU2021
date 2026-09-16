@@ -4,5 +4,6 @@
 #include "common.h"
 
 swaddr_t lookup_symbol(const char *name);
+const char *lookup_addr(swaddr_t addr);
 
 #endif

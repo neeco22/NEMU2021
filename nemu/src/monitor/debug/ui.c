@@ -8,7 +8,7 @@
 #include <readline/history.h>
 
 void cpu_exec(uint32_t);
-
+void print_stackframe();
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
 	static char *line_read = NULL;
@@ -128,6 +128,11 @@ static int cmd_d(char *args){
 	return 0;
 }
 
+static int cmd_bt(char *args){
+	print_stackframe();
+	return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -144,7 +149,7 @@ static struct {
 	{"p","Expression evaluation",cmd_p},
 	{"w","Set watchpoint",cmd_w},
 	{"d","Delete watchpoint",cmd_d},
-
+	{"bt","Print stack frame information",cmd_bt},
 	/* TODO: Add more commands */
 
 };

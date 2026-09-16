@@ -1,4 +1,4 @@
-#include "common.h"
+#include "nemu.h"
 #include <stdlib.h>
 #include <elf.h>
 
@@ -91,4 +91,22 @@ swaddr_t lookup_symbol(const char *name){
 	printf("Symbol '%s' not found\n", name);
 	assert(0);
 	return 0;	
+}
+
+const char *lookup_addr(swaddr_t addr) {
+    int i;
+    const char *name = "???";
+    swaddr_t best = 0;
+    int found = 0;
+    for(i = 0; i < nr_symtab_entry; i ++) {
+        if(symtab[i].st_name != 0 &&
+           ELF32_ST_TYPE(symtab[i].st_info) == STT_FUNC &&  
+           symtab[i].st_value <= addr &&
+           (!found || symtab[i].st_value > best)) {
+            best = symtab[i].st_value;
+            name = strtab + symtab[i].st_name;
+            found = 1;
+        }
+    }
+    return name;
 }
