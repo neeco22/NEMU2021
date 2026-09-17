@@ -20,6 +20,9 @@ FLOAT f2F(float a) {
 	int exp=(bits >> 23) & 0xff;
 	int frac=bits & 0x7fffff | 0x800000;
 	int result;
+	if(exp==0){
+		return 0;
+	}
 	if(exp-134>=0){
 		result=frac<<(exp-134);
 	}
