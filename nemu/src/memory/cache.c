@@ -39,7 +39,7 @@ static int load_block(uint32_t set,uint32_t tag,hwaddr_t addr){
     if(way==-1) way=rand() % CACHE_WAY;
 
     CacheLine *l=&cache[set].line[way];
-    hwaddr_t block_base=addr & -(hwaddr_t)(CACHE_BLOCK_SIZE - 1);
+    hwaddr_t block_base=addr & ~(hwaddr_t)(CACHE_BLOCK_SIZE - 1);
 
     l->tag=tag;
     l->valid=1;
@@ -67,7 +67,7 @@ uint32_t cache_read(hwaddr_t addr,size_t len){
     uint32_t result=0;
     size_t i;
     for(i=0;i<len;i++){
-        result |= (uint32_t)cache[set].line[i].data[offset+i] << (i*8);
+        result |= (uint32_t)cache[set].line[way].data[offset+i] << (i*8);
     }
     return result;
 }
